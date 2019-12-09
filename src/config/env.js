@@ -6,7 +6,8 @@
  * baseImgPath: 图片存放地址
  * 
  */
-let baseUrl = 'http://lixing1213.club:3000';
+// let baseUrl = 'http://lixing1213.club:3000';
+let baseUrl = '/server/controllers';
 // let routerMode = 'hash';
 // let baseImgPath;
 

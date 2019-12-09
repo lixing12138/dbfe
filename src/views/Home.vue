@@ -19,7 +19,7 @@
             <el-input type="password" v-model="formData.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('formData')">提交</el-button>
+            <el-button type="primary" @click="submitForm('formData')" class="btn">提交</el-button>
           </el-form-item>
       </el-form>
     </div>
@@ -30,7 +30,7 @@
 // @ is an alias to /src
 import Page from '../components/Page'
 import { login } from '../api/getData'
-
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Home',
   data(){
@@ -41,18 +41,35 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState(['userInfo']),
+  },
   components: {
     Page
   },
   methods: {
+    ...mapActions(['getUserData']),
     submitForm(formData){
       this.$refs[formData].validate(async (valid) => {
           if (valid) {
             let res = await login({
-              username: this.formData.username,
+              nickname: this.formData.username,
               password: this.formData.password
             });
-            console.log(res.data);
+            if(res.result){
+              await this.getUserData();
+              if(res.type === 'admin'){
+                this.$router.push({ path: "admin" });
+              }
+              if (res.type === 'student'){
+                this.$router.push({ path: 'student' });
+              }
+              if(res.type === 'root'){
+                this.$router.push({ path: 'admin'});
+              }
+            }else{
+              this.$message(res.message);
+            }
           } else {
             console.log('error submit!!');
             return false;
@@ -67,10 +84,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 100px;
   .form{
     background-color: #f6f6f6;
-    margin-top: 10px;
-    width: 300px;
+    padding: 60px;
+    width: 500px;
+    .btn{
+      float: right;
+    }
   }
 }
 </style>

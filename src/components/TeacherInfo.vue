@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { putTeacherInfo } from '../api/getData'
+
 export default {
     name: 'TeacherInfo',
     props: {
@@ -37,7 +39,7 @@ export default {
             formData.append('t_id', this.info.tid);
             formData.append('t_name', this.info.tname);
             formData.append('t_dept_name', this.info.tdeptname);
-            let res = await this.axios.put(`${this.$config.server}/admin/teacher`, formData);
+            let res = putTeacherInfo(formData);
             res.data.result ? this.$message({
                 type: 'success',
                 message: '修改成功'

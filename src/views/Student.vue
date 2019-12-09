@@ -59,6 +59,7 @@
 
 <script>
 import Page from '../components/Page'
+import { login } from '../api/getData'
 
 export default {
   data() {

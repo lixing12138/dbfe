@@ -99,6 +99,12 @@ import Page from '../components/Page'
 import StudentInfo from '../components/StudentInfo'
 import TeacherInfo from '../components/TeacherInfo'
 import Upload from '../components/Upload'
+import { getStudentInfo, deleteStudentInfo,uploadStudentInfo,
+getTeacherInfo, deleteTeacherInfo,uploadTeacherInfo,
+getCourseInfo, deleteCourseInfo,uploadCourseInfo,
+uploadSectionInfo
+} from '../api/getData'
+
 export default {
   name: 'Admin',
   data(){
@@ -136,11 +142,11 @@ export default {
   },
   methods: {
     async getStudentData(){
-      let res = await this.axios.get(`${this.$config.server}/admin/students`);
+      let res = await getStudentInfo();
       this.studentData = res.data;
     },
     async getTeacherData(){
-      let res = await this.axios.get(`${this.$config.server}/admin/teachers`);
+      let res = await getTeacherInfo();
       this.teacherData = res.data;
     },
     // 处理学生信息
@@ -158,12 +164,8 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then( async () => {
-          let res = await this.axios.delete(`${this.$config.server}/admin/student`, {
-            params: {
-              id: row.sid
-            }
-          });
+        }).then(async () => {
+          let res = await deleteStudentInfo({id: row.sid});
           res.data.result ? this.$message({
             type: 'success',
             message: '删除成功!'
@@ -195,11 +197,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then( async () => {
-          let res = await this.axios.delete(`${this.$config.server}/admin/teacher`, {
-            params: {
-              tid: row.tid
-            }
-          });
+          let res = await deleteTeacherInfo({tid: row.tid});
           res.data.result ? this.$message({
             type: 'success',
             message: '删除成功!'
@@ -218,11 +216,10 @@ export default {
       this.teacherDialogVisible = false;
     },
     // 处理标签切换，更改path的值
-    handleChangeTaps(tab, event){
-        this.path = `${this.$config.server}/admins/${tab.name}/upload`;
-        console.log(this.path);
-
-    }
+    // handleChangeTaps(tab, event){
+    //     this.path = `${this.$config.server}/admins/${tab.name}/upload`;
+    //     console.log(this.path);
+    // }
   }
 }
 </script>
