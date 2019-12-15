@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-loading="loading">
+  <div id="app">
     <router-view/>
   </div>
 </template>
@@ -11,7 +11,7 @@ import store from './store/index'
 export default {
   data(){
     return {
-      loading: true
+      // loading: true
     }
   },
   computed: {
@@ -27,7 +27,7 @@ export default {
       if(store.state.isLogin){
         this.$router.push({name: store.state.userInfo.type});
       }
-      this.loading = false;
+      // this.loading = false;
     }
   }
 }

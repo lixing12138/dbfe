@@ -1,14 +1,13 @@
 <template>
   <Page> 
-    <div class="student">
+    <div class="student" v-loading="loading">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-        <el-tab-pane label="可选课程" name="first">可选课程
+        <el-tab-pane label="可选课程" name="first">
           <el-table
-            :data="kexuanData"
+            :data="coursesSeleted"
             border
             style="width: 100%">
             <el-table-column
-              fixed
               prop="c_id"
               label="课程编号"
               width="150">
@@ -16,35 +15,78 @@
             <el-table-column
               prop="c_name"
               label="课程名称"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              prop="c_dept_name"
+              label="开课院系"
               width="120">
             </el-table-column>
             <el-table-column
-              prop="c_credit"
+              prop="c_teacher"
+              label="任课教师"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              prop="credit"
               label="学分"
+              width="40">
+            </el-table-column>
+            <el-table-column
+              label="上课时间"
+              width="200">
+              <template slot-scope="scope">
+                <div v-for=" time in scope.row.c_time" :key="time.c_sec_time">
+                  <p>{{ time.c_sec_time}}</p>
+                  <p>{{ time.c_start_time}}至{{ time.c_end_time}}</p>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="上课教室"
+              width="120">
+              <template slot-scope="scope">
+                <p>{{ scope.row.c_building}}</p>
+                <p>{{ scope.row.c_room_number}}</p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="c_exam_format"
+              label="考试形式"
               width="120">
             </el-table-column>
             <el-table-column
-              prop="city"
-              label="市区"
-              width="120">
+              label="考试时间"
+              width="200">
+              <template slot-scope="scope">
+                <p>{{ scope.row.c_exam_start_time}}</p>
+                <p>至</p>
+                <p>{{ scope.row.c_exam_end_time}}</p>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="address"
-              label="地址"
-              width="300">
+              label="考试教室"
+              width="120">
+              <template slot-scope="scope">
+                <p>{{ scope.row.c_exam_building}}</p>
+                <p>{{ scope.row.c_exam_room}}</p>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="zip"
-              label="邮编"
-              width="120">
+              prop="c_total_number"
+              label="选课人数"
+              width="40">
             </el-table-column>
+            <el-table-column
+              prop="c_max_number"
+              label="最大人数"
+              width="40">
+              </el-table-column>
             <el-table-column
               fixed="right"
-              label="操作"
-              width="100">
+              label="操作">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                <el-button type="text" size="small">编辑</el-button>
+                <el-button @click="applyCourse(scope.row)" type="text" size="small">选课</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -59,17 +101,19 @@
 
 <script>
 import Page from '../components/Page'
-import { login } from '../api/getData'
+import { getCourses, chooseCourse } from '../api/getData'
 
 export default {
   data() {
     return {
       activeName: 'first',
-      kexuanData: [],
+      coursesSeleted: [],
+      loading: true,
     };
   },
   created(){
-    this.getKexuanCourse();
+    this.getCoursesData();
+    this.loading = false;
   },
   components: {
     Page,
@@ -78,13 +122,24 @@ export default {
       handleClick(tab, event) {
         console.log(tab, event);
       },
-      async getKexuanCourse(){
-        let result = await this.axios.get();
-        let courses = result.courses;
-        for(let course of courses){
-          let res = await this.axios.get(``);
-          this.kexuanData.push({...res.data,c_id: course});
+
+      async getCoursesData(){
+        let res = await getCourses({ choose: false});
+        let courseIds = res.courses; 
+        let tmpData = [];
+        for(let id of courseIds){
+          let info = await getCourses({ c_id: id});
+          tmpData.push({...info.data,c_id:id});
         }
+        this.coursesSeleted = tmpData;
+      },
+      async applyCourse(row){
+        let res = await chooseCourse({ c_id: row.c_id, operation: 'chose'});
+        console.log(res);
+        res.result ? this.$message({
+          type: 'success',
+          message: res.message
+        }):this.$message.error(res.message);
       }
   }
 }
