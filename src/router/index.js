@@ -45,6 +45,12 @@ const routes = [{
             import ('../views/Admin.vue')
     },
     {
+        path: '/tip',
+        name: 'tip',
+        component: () =>
+            import ('../views/Tip.vue')
+    },
+    {
         path: '/auth',
         name: 'auth',
         component: () =>
@@ -70,7 +76,11 @@ router.beforeEach((to, from, next) => {
             if (to.meta.type !== store.state.userInfo.type) {
                 next({ name: 'auth' })
             } else {
-                next();
+                if (store.state.userInfo.type === 'student' && !store.state.isTime) {
+                    next({ name: 'tip' });
+                } else {
+                    next();
+                }
             }
         } else {
             next({ name: 'home' });

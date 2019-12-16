@@ -1,8 +1,8 @@
 <template>
   <div class="navigator">
       <div class="title">
-          <!-- 复旦大学选课系统 -->
-          123
+          选课系统
+          <!-- 123 -->
           </div>
       <div v-if="showInfo"  class="info">
           <el-dropdown trigger="click" @command="logout()">

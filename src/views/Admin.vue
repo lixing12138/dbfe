@@ -218,6 +218,12 @@
 
         <el-tab-pane label="选课时间管理" name="times">
           <el-date-picker
+            v-model="section_start_time"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="设置选课开始时间">
+          </el-date-picker>
+          <el-date-picker
             v-model="section_end_time"
             type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
@@ -258,7 +264,7 @@ import { getStudentInfo, deleteStudentInfo,uploadStudentInfo,
 getTeacherInfo, deleteTeacherInfo,uploadTeacherInfo,
 getCourseInfo, deleteCourseInfo,uploadCourseInfo,
 getSectionInfo, deleteSectionInfo, uploadSectionInfo,
-
+setTime,
 } from '../api/getData'
 
 export default {
@@ -312,6 +318,7 @@ export default {
       },
       path: '/server/controllers/admins/students/upload.php',
       loading: true,
+      section_start_time: '',// 选课开始时间
       section_end_time: '',// 选课截止时间
       time: {
         end_time: ''
@@ -540,8 +547,15 @@ export default {
     },
 
 
-    setSectionTime(){
-      console.log(this.section_end_time);
+    async setSectionTime(){
+      let res = await setTime({ time1: this.section_start_time, time2: this.section_end_time });
+      res.result ? this.$message({
+        type: 'success',
+        message: res.message
+      }): this.$message({
+        type: 'info',
+        message: res.message
+      });  
     },
     // 处理标签切换，更改path的值
     handleChangeTaps(tab, event){

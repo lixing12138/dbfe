@@ -15,6 +15,10 @@ export const logout = (data) => fetch('/users.php', data);
  */
 export const getUserInfo = () => fetch('/users/current.php');
 
+/**
+ * 判断是否到选课时间
+ */
+export const isTime = () => fetch('/admins/time.php');
 
 /**
  * 管理员上传学生信息
@@ -109,7 +113,7 @@ export const getSectionInfo = data => fetch('/admins/sections.php', data);
 /**
  * 管理员设置开课时间
  */
-// export const uploadSectionInfo = data => fetch('/admins/sections/upload.php', data, 'POST')
+export const setTime = data => fetch('/admins/time.php', data, 'POST')
 
 
 /**
@@ -134,3 +138,41 @@ export const getGrades = data => fetch('/students/courses/grade.php', data, 'GET
  * 查看选课申请
  */
 export const getApplication = data => fetch('/students/courses/application.php', data, 'GET');
+
+
+
+/**
+ * 教师
+ */
+
+
+/**
+ * 获取所教课程
+ */
+export const getAllTeach = () => fetch('/teachers/courses.php');
+
+/**
+ * 查看学生名单
+ */
+export const getStudentList = data => fetch('/teachers/students.php', data);
+
+/**
+ * 查看选课申请
+ */
+export const getApplyFromStudent = () => fetch('/teachers/applications.php');
+
+/**
+ * 处理选课申请
+ */
+export const handleApply = data => fetch('/teachers/applications.php', data, 'POST');
+
+/**
+ * 手动登分
+ */
+export const uploadByhand = data => fetch('/teachers/grade.php', data, 'POST');
+
+
+/**
+ * 选课时间
+ */
+export const getTime = () => fetch('/admins/time.php')

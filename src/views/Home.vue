@@ -29,7 +29,7 @@
 <script>
 // @ is an alias to /src
 import Page from '../components/Page'
-import { login } from '../api/getData'
+import { login, isTime } from '../api/getData'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Home',
@@ -48,7 +48,7 @@ export default {
     Page
   },
   methods: {
-    ...mapActions(['getUserData']),
+    ...mapActions(['getUserData', 'setTimeChoose']),
     submitForm(formData){
       this.$refs[formData].validate(async (valid) => {
           if (valid) {
@@ -58,11 +58,19 @@ export default {
             });
             if(res.result){
               await this.getUserData();
+              await this.setTimeChoose();
               if(res.type === 'admin'){
                 this.$router.push({ path: "admin" });
               }
               if (res.type === 'student'){
-                this.$router.push({ path: 'student' });
+                if(this.$store.state.isTime){
+                  this.$router.push({ path: 'student' });
+                }else{
+                  this.$router.push({ path: 'Tip' });
+                }
+              }
+              if (res.type === 'teacher'){
+                this.$router.push({ path: 'teacher' });
               }
               if(res.type === 'root'){
                 this.$router.push({ path: 'admin'});

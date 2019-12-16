@@ -21,9 +21,10 @@ export default {
     this.getData();
   },
   methods:{
-    ...mapActions(['getUserData']),
+    ...mapActions(['getUserData', 'setTimeChoose']),
     async getData(){
       await this.getUserData();
+      await this.setTimeChoose();
       if(store.state.isLogin){
         this.$router.push({name: store.state.userInfo.type});
       }
